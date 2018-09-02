@@ -50,29 +50,29 @@ class JHViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.currentColor = UIColor.blackColor()
+        self.currentColor = UIColor.black
         
         self.device = MTLCreateSystemDefaultDevice()
         self.metalLayer = CAMetalLayer()
         self.metalLayer.device = self.device
-        self.metalLayer.pixelFormat = .BGRA8Unorm
+        self.metalLayer.pixelFormat = .bgra8Unorm
         self.metalLayer.framebufferOnly = true
         self.metalLayer.frame = self.view.frame
         self.view.layer.insertSublayer(self.metalLayer, below: self.toolbar.layer)
         
-        self.commandQueue = self.device.newCommandQueue()
+        self.commandQueue = self.device.makeCommandQueue()
         
         let defaultLibrary = self.device.newDefaultLibrary()
-        let fragmentProgram = defaultLibrary?.newFunctionWithName("basic_fragment")
-        let vertexProgram = defaultLibrary?.newFunctionWithName("basic_vertex")
+        let fragmentProgram = defaultLibrary?.makeFunction(name: "basic_fragment")
+        let vertexProgram = defaultLibrary?.makeFunction(name: "basic_vertex")
         
         let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
         pipelineStateDescriptor.vertexFunction = vertexProgram
         pipelineStateDescriptor.fragmentFunction = fragmentProgram
-        pipelineStateDescriptor.colorAttachments[0].pixelFormat = .BGRA8Unorm
+        pipelineStateDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
         
         do {
-            try self.pipelineState = self.device.newRenderPipelineStateWithDescriptor(pipelineStateDescriptor)
+            try self.pipelineState = self.device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
         } catch {
             if self.pipelineState == nil {
                 print("Something's wrong with pipelinestate initialization")
@@ -80,33 +80,33 @@ class JHViewController: UIViewController {
         }
         
         self.timer = CADisplayLink(target: self, selector: Selector("gameLoop"))
-        self.timer.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSRunLoopCommonModes)
+        self.timer.add(to: RunLoop.main, forMode: RunLoopMode.commonModes)
         
-        self.view.multipleTouchEnabled = false
-        self.view.userInteractionEnabled = true
+        self.view.isMultipleTouchEnabled = false
+        self.view.isUserInteractionEnabled = true
     }
     
-    @IBAction func redButtonTapped(sender: AnyObject) {
-        self.currentColor = UIColor.redColor()
+    @IBAction func redButtonTapped(_ sender: AnyObject) {
+        self.currentColor = UIColor.red
     }
     
-    @IBAction func yellowButtonTapped(sender: AnyObject) {
-        self.currentColor = UIColor.yellowColor()
+    @IBAction func yellowButtonTapped(_ sender: AnyObject) {
+        self.currentColor = UIColor.yellow
     }
     
-    @IBAction func greenButtonTapped(sender: AnyObject) {
-        self.currentColor = UIColor.greenColor()
+    @IBAction func greenButtonTapped(_ sender: AnyObject) {
+        self.currentColor = UIColor.green
     }
     
-    @IBAction func blueButtonTapped(sender: AnyObject) {
-        self.currentColor = UIColor.blueColor()
+    @IBAction func blueButtonTapped(_ sender: AnyObject) {
+        self.currentColor = UIColor.blue
     }
     
-    @IBAction func blackButtonTapped(sender: AnyObject) {
-        self.currentColor = UIColor.blackColor()
+    @IBAction func blackButtonTapped(_ sender: AnyObject) {
+        self.currentColor = UIColor.black
     }
     
-    @IBAction func clearButtonTapped(sender: AnyObject) {
+    @IBAction func clearButtonTapped(_ sender: AnyObject) {
         self.bufferCleared = 0
         self.prevVertex = nil
     }

@@ -15,40 +15,40 @@ extension JHViewController {
         if let drawable = self.metalLayer.nextDrawable() {
             if self.bufferCleared <= 3 {
                 self.renderPassDescriptor = MTLRenderPassDescriptor()
-                self.renderPassDescriptor.colorAttachments[0].loadAction = .Clear
+                self.renderPassDescriptor.colorAttachments[0].loadAction = .clear
                 self.renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0.9, 0.9, 0.9, 1)
-                self.renderPassDescriptor.colorAttachments[0].storeAction = .Store
+                self.renderPassDescriptor.colorAttachments[0].storeAction = .store
                 
                 self.bufferCleared += 1
             } else {
-                self.renderPassDescriptor.colorAttachments[0].loadAction = .Load
+                self.renderPassDescriptor.colorAttachments[0].loadAction = .load
             }
             
             self.renderPassDescriptor.colorAttachments[0].texture = drawable.texture
             
             if self.vertexData.count <= 0 {
-                let commandBuffer = self.commandQueue.commandBuffer()
+                let commandBuffer = self.commandQueue.makeCommandBuffer()
                 
-                let renderEncoderOpt:MTLRenderCommandEncoder? = commandBuffer.renderCommandEncoderWithDescriptor(self.renderPassDescriptor)
+                let renderEncoderOpt:MTLRenderCommandEncoder? = commandBuffer.makeRenderCommandEncoder(descriptor: self.renderPassDescriptor)
                 if let renderEncoder = renderEncoderOpt {
                     renderEncoder.setRenderPipelineState(self.pipelineState)
                     renderEncoder.endEncoding()
                 }
                 
-                commandBuffer.presentDrawable(drawable)
+                commandBuffer.present(drawable)
                 commandBuffer.commit()
             } else {
-                let commandBuffer = self.commandQueue.commandBuffer()
+                let commandBuffer = self.commandQueue.makeCommandBuffer()
                 
-                let renderEncoderOpt:MTLRenderCommandEncoder? = commandBuffer.renderCommandEncoderWithDescriptor(self.renderPassDescriptor)
+                let renderEncoderOpt:MTLRenderCommandEncoder? = commandBuffer.makeRenderCommandEncoder(descriptor: self.renderPassDescriptor)
                 
                 if let renderEncoder = renderEncoderOpt {
                     renderEncoder.setRenderPipelineState(self.pipelineState)
-                    renderEncoder.setVertexBuffer(self.vertexBuffer, offset: 0, atIndex: 0)
-                    renderEncoder.setVertexBuffer(self.colorBuffer, offset: 0, atIndex: 1)
+                    renderEncoder.setVertexBuffer(self.vertexBuffer, offset: 0, at: 0)
+                    renderEncoder.setVertexBuffer(self.colorBuffer, offset: 0, at: 1)
                     
                     if self.vertexData.count > 0 {
-                        renderEncoder.drawPrimitives(.TriangleStrip, vertexStart: 0, vertexCount: self.vertexData.count/4, instanceCount: 3)
+                        renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: self.vertexData.count/4, instanceCount: 3)
                     }
                     
                     renderEncoder.endEncoding()
@@ -70,7 +70,7 @@ extension JHViewController {
                     self.prevVertex = nil
                 }
                 
-                commandBuffer.presentDrawable(drawable)
+                commandBuffer.present(drawable)
                 commandBuffer.commit()
             }
         }

@@ -10,17 +10,17 @@ import Foundation
 import UIKit
 
 func distanceBetween(pointA a:CGPoint, pointB b:CGPoint) -> CGFloat {
-    let difference = CGPointMake(b.x - a.x, b.y - a.y)
+    let difference = CGPoint(x: b.x - a.x, y: b.y - a.y)
     return mag(difference)
 }
 
-func mag(v:CGPoint) -> CGFloat {
+func mag(_ v:CGPoint) -> CGFloat {
     return sqrt(v.x * v.x + v.y * v.y)
 }
 
-func normalize(v:CGPoint) -> CGPoint {
+func normalize(_ v:CGPoint) -> CGPoint {
     let l = mag(v)
-    return CGPointMake(v.x / l, v.y / l)
+    return CGPoint(x: v.x / l, y: v.y / l)
 }
 
 func getMetalCoordinate(forPoint point:CGPoint, forFrame frame:CGRect) -> (Float, Float) {
@@ -30,7 +30,7 @@ func getMetalCoordinate(forPoint point:CGPoint, forFrame frame:CGRect) -> (Float
     return (xCoord, yCoord)
 }
 
-func getColorFromHex(hexValue:UInt) -> UIColor {
+func getColorFromHex(_ hexValue:UInt) -> UIColor {
     var hex = hexValue;
     if hex > 0xffffff {
         hex = 0xffffff
